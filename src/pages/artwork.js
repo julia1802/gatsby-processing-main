@@ -59,27 +59,63 @@ function goban(p5) {
     };
   };
 
+  let arriereplan_rouge = 10 ; 
+  let arriereplan_vert = 10 ;
+  let arriereplan_bleu = 63 ;
+  let arriereplan_alpha = 225;
+
+  p5.draw = function(){
+    p5.background(arriereplan_rouge,arriereplan_vert, arriereplan_bleu, arriereplan_alpha);
+    let step = 100;
+    let offset = step/2;
+    let inc = 0;
+
+    for(let i = 0; i < p5.width ; i = i + step){
+      for(let j = 0; j < p5.height ; j = j + step){
+        let x = i + offset;
+        let y = j + offset; 
+        let size = p5.random(10, 50);
+        let rot = p5.frameCount * 0.00003;
+        if(p5.mouseIsPressed){
+          rot = rot * -2;
+        }
+        pierre2(x, y, 15, rot)
+        pierre1(x, y, 400, rot);
+      }
+    }
+  }
+  let rot_is = false; 
+  p5.mousePressed = function(){
+    if(rot_is) rot_is = false; else rot_is = true;
+    arriereplan_rouge = p5.random(255);
+    arriereplan_vert = p5.random(255);
+    arriereplan_bleu = p5.random(255);
+    arriereplan_alpha = p5.random(255);
+    p5.strokeWeight(1);
+  }
   
-function apparence(interieur, exterieur, epaisseur){
-  p5.fill(interieur);
-  p5.stroke(exterieur);
-  p5.strokeWeight(epaisseur);
+  function pierre1(x, y, taille, rotation) {
+    let alpha = 255;
+    p5.stroke(135,y, taille, alpha);
+    p5.noFill (0);
+    // if(inc%5 === 0);
+    p5.rotate(rotation);
+    p5.square(400,400, taille);
+  }
+  
+  function pierre2(x,y,size, rotation){
+    let alpha = 255;
+    p5.fill(221, 210, 0, alpha);
+    p5.stroke(221, 210, 0, alpha);
+    let offset = size / 2;
+    p5.push();
+    p5.translate(x, y)
+    p5.push();
+    p5.rotate(rotation);
+    p5.translate(+ offset, + offset);
+    p5.circle(0,0, size);
+    p5.pop();
+    p5.pop();
+  }
 }
-
-function batement (x, y, tx, ty, interieur, exterieur, epaisseur){
-  apparence(interieur, exterieur, epaisseur);
-  let coeur_x = p5.sin(p5.frameCount/60) *tx;
-  let coeur_y = p5.sin(p5.frameCount/60)*ty;
-  p5.ellipse(x, y, coeur_x, coeur_y);
-}
-
-  p5.draw = function () {
-    p5.background("lightgreen");
-    p5.rectMode(p5.CENTER);
-    batement(p5.mouseX, p5.mouseY, 50, 50, "lightblue", "white", 5);
-    batement(p5.mouseY, p5.mouseX, 50, 50, "white", "lightblue", 5);
-  };
-};
-
-
  
